@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Caja</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .btn-producto {
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto py-8 px-4">
+        <h1 class="text-3xl font-bold mb-8">Caja</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Productos seleccionados -->
+            <div class="overflow-hidden rounded-lg border border-gray-200">
+                <h2 class="text-xl font-semibold bg-gray-200 py-3 px-6">Productos Seleccionados</h2>
+                <div class="p-6">
+                    <div id="productos-seleccionados" class="mt-4 overflow-y-auto max-h-80">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio Unitario</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-productos-seleccionados">
+                                <!-- Aquí se agregarán dinámicamente los productos seleccionados -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-4 text-right">
+                        <span class="text-lg font-semibold">Total: $<span id="total-venta">0.00</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categorías y productos -->
+            <div>
+                <div class="mb-4">
+                    <h2 class="text-xl font-semibold mb-4">Categorías</h2>
+                    <div class="flex flex-wrap space-x-2">
+                        <div th:each="categoria : ${categorias}">
+                            <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300"
+                                    th:text="${categoria}"
+                                    th:attr="data-categoria=${categoria}"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-semibold mb-4">Productos</h2>
+                    <div id="productos" class="grid grid-cols-2 gap-4">
+                        <!-- Aquí se cargarán dinámicamente los productos de la categoría seleccionada -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario para procesar la venta -->
+        <div class="mt-8 max-w-md">
+            <form id="ventaForm" th:action="@{/caja/procesar}" method="post">
+                <div class="mt-8">
+                    <label for="metodoPago" class="block text-sm font-medium text-gray-700">Método de pago:</label>
+                    <select id="metodoPago" name="metodoPago" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="tarjeta">Tarjeta QR</option>
+                        <option value="efectivo">Efectivo</option>
+                    </select>
+                </div>
+                <div id="efectivoDiv" style="display: none;">
+                    <label for="efectivo" class="block mt-4 text-sm font-medium text-gray-700">Monto recibido:</label>
+                    <input type="number" id="efectivo" name="efectivo" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <button type="submit" class="mt-4 inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+                    Procesar Venta
+                </button>
+            </form>
+        </div>
+
+        <div th:if="${mensaje}" class="mt-8">
+            <h2 class="text-xl font-semibold mb-2" th:text="${mensaje}"></h2>
+            <p class="text-lg">Total: $<span th:text="${total}"></span></p>
+            <p class="text-lg">Vuelto: $<span th:text="${vuelto}"></span></p>
+        </div>
+        
+        <div th:if="${error}" class="mt-8">
+            <h2 class="text-xl font-semibold" th:text="${error}"></h2>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Función para cargar productos por categoría
+            function cargarProductosPorCategoria(categoria) {
+                fetch(`/caja/productos?categoria=${categoria}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const productosContainer = document.getElementById('productos');
+                        productosContainer.innerHTML = ''; // Limpiar productos anteriores
+
+                        data.forEach(producto => {
+                            const card = document.createElement('div');
+                            card.classList.add('border', 'rounded', 'p-4');
+
+                            card.innerHTML = `
+                                <h3 class="font-semibold text-lg">${producto.nombre}</h3>
+                                <p>${producto.descripcion}</p>
+                                <p class="mt-2 text-gray-700">$ ${producto.precio.toFixed(2)}</p>
+                                <button class="bg-green-500 text-white rounded-lg py-2 px-4 mt-2 hover:bg-green-600 transition duration-300"
+                                        onclick="agregarProducto(${producto.id}, '${producto.nombre}', '${producto.descripcion}', ${producto.precio}, ${producto.esPesable})">
+                                    Agregar
+                                </button>
+                            `;
+
+                            productosContainer.appendChild(card);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar productos:', error);
+                    });
+            }
+
+            // Event listener para los botones de categoría
+            const botonesCategoria = document.querySelectorAll('[data-categoria]');
+            botonesCategoria.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const categoria = this.getAttribute('data-categoria');
+                    cargarProductosPorCategoria(categoria);
+                });
+            });
+
+            // Función para agregar producto seleccionado
+            function agregarProducto(productoId, nombre, descripcion, precio, esPesable) {
+                let cantidad = 1;
+                if (esPesable) {
+                    cantidad = prompt("Ingrese la cantidad en kg:", 1);
+                } else {
+                    cantidad = prompt("Ingrese la cantidad:", 1);
+                }
+                cantidad = parseFloat(cantidad);
+
+                if (isNaN(cantidad) || cantidad <= 0) {
+                    alert("Cantidad inválida");
+                    return;
+                }
+
+                const subtotal = cantidad * precio;
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${nombre}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${descripcion}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">$${precio.toFixed(2)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="editable-cantidad" data-precio="${precio}" contenteditable="true">${cantidad}</span></td>
+                    <td class="px-6 py-4 whitespace-nowrap subtotal" data-precio="${precio}">$${subtotal.toFixed(2)}</td>
+                    <input type="hidden" name="producto_${productoId}" value="${cantidad}">
+                `;
+                document.getElementById("tabla-productos-seleccionados").appendChild(tr);
+
+                actualizarTotal();
+            }
+
+            // Actualizar total de la venta
+            function actualizarTotal() {
+                let total = 0;
+                document.querySelectorAll(".subtotal").forEach(function(subtotalElement) {
+                    total += parseFloat(subtotalElement.innerText.replace("$", ""));
+                });
+                document.getElementById("total-venta").innerText = total.toFixed(2);
+            }
+
+            // Cambiar método de pago
+            const metodoPagoSelect = document.getElementById("metodoPago");
+            const efectivoDiv = document.getElementById("efectivoDiv");
+            metodoPagoSelect.addEventListener("change", function() {
+                if (this.value === "efectivo") {
+                    efectivoDiv.style.display = "block";
+                } else {
+                    efectivoDiv.style.display = "none";
+                }
+            });
+
+            // Actualizar cantidad y subtotal al editar la cantidad
+            document.addEventListener("input", function(event) {
+                if (event.target.classList.contains("editable-cantidad")) {
+                    const cantidadSpan = event.target;
+                    const precio = parseFloat(cantidadSpan.getAttribute("data-precio"));
+                    let cantidad = parseFloat(cantidadSpan.innerText);
+                    if (isNaN(cantidad) || cantidad <= 0) {
+                        cantidad = 1;
+                        cantidadSpan.innerText = cantidad;
+                    }
+                    const subtotalElement = cantidadSpan.parentNode.nextElementSibling;
+                    const subtotal = precio * cantidad;
+                    subtotalElement.innerText = `$${subtotal.toFixed(2)}`;
+                    actualizarTotal();
+                }
+            });
+
+            // Añadir función global para agregar productos
+            window.agregarProducto = agregarProducto;
+        });
+    </script>
+</body>
+</html>
