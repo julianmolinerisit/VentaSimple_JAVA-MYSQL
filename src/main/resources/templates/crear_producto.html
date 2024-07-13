@@ -51,13 +51,13 @@
                 <span class="text-sm">¿Es pesable?</span>
             </div>
             <div class="mb-4">
-                <label id="labelPrecio" for="precio" th:text="${producto.esPesable} ? 'Precio por kg:' : 'Precio unitario:'" class="block text-gray-700 text-sm font-bold mb-2">Precio:</label>
+                <label id="labelPrecio" for="precio" class="block text-gray-700 text-sm font-bold mb-2">Precio:</label>
                 <input type="text" id="precio" th:field="*{precio}" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
-                <label id="labelCantidad" for="cantidad" th:text="${producto.esPesable} ? 'Cantidad (kg):' : 'Cantidad (u):'" class="block text-gray-700 text-sm font-bold mb-2">Cantidad:</label>
+                <label id="labelCantidad" for="cantidad" class="block text-gray-700 text-sm font-bold mb-2">Cantidad:</label>
                 <input type="text" id="cantidad" th:field="*{cantidad}" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <span id="unidadCantidad" th:text="${producto.esPesable} ? 'kg' : 'u'" class="text-gray-600 text-sm">u</span>
+                <span id="unidadCantidad" class="text-gray-600 text-sm"></span>
             </div>
             <div class="mb-6">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Guardar</button>

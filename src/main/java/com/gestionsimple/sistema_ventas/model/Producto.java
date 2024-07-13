@@ -24,14 +24,17 @@ public class Producto {
 
     @NotNull(message = "La cantidad es obligatoria")
     @Min(value = 0, message = "La cantidad debe ser mayor o igual a cero")
-    private Double cantidad; // Cambiado a Double para manejar unidades y peso
+    private int cantidad;
 
     private boolean esPesable;
 
     @NotEmpty(message = "La categoría no puede estar vacía")
-    private String categoria; // Nueva propiedad para la categoría
+    private String categoria;
+
+    private String descripcion;
     
-    private String descripcion; // Nuevo campo para la descripción
+    private boolean activo; // Nuevo campo
+
 
     // Getters y Setters
 
@@ -59,11 +62,11 @@ public class Producto {
         this.precio = precio;
     }
 
-    public Double getCantidad() {
+    public int getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(Double cantidad) {
+    public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
 
@@ -90,4 +93,14 @@ public class Producto {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+    
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+    
+    
 }

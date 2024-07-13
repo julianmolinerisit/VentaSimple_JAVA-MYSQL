@@ -1,22 +1,18 @@
 package com.gestionsimple.sistema_ventas.controller;
 
-import com.gestionsimple.sistema_ventas.model.DetalleVenta;
 import com.gestionsimple.sistema_ventas.model.Producto;
+import com.gestionsimple.sistema_ventas.model.DetalleVenta;
 import com.gestionsimple.sistema_ventas.model.Venta;
 import com.gestionsimple.sistema_ventas.services.ProductoService;
 import com.gestionsimple.sistema_ventas.services.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Map;
 
 @Controller
-@RequestMapping("/caja")
 public class CajaController {
 
     @Autowired
@@ -25,67 +21,45 @@ public class CajaController {
     @Autowired
     private VentaService ventaService;
 
-    @GetMapping
-    public String mostrarFormularioVenta(Model model) {
-        List<String> categorias = productoService.obtenerTodasLasCategorias();
-        model.addAttribute("categorias", categorias);
-        return "caja";  // El nombre del archivo HTML
+    @GetMapping("/caja")
+    public String mostrarCaja() {
+        return "caja";
     }
 
-    @GetMapping("/productos")
+    @GetMapping("/productos/categoria/{categoria}")
     @ResponseBody
-    public List<Producto> obtenerProductosPorCategoria(@RequestParam String categoria) {
+    public List<Producto> obtenerProductosPorCategoria(@PathVariable String categoria) {
         return productoService.obtenerProductosPorCategoria(categoria);
     }
 
-    @PostMapping("/procesar")
-    public String procesarVenta(@RequestParam Map<String, String> requestParams, Model model) {
-        Venta venta = new Venta();
+    @PostMapping("/ventas")
+    @ResponseBody
+    public String registrarVenta(@RequestBody Venta venta) {
+        // Asignar la fecha y hora actual del sistema al campo fechaHora
         venta.setFechaHora(LocalDateTime.now());
-        venta.setMetodoPago(requestParams.get("metodoPago"));
 
-        List<DetalleVenta> detallesVenta = new ArrayList<>();
-        double total = 0;
-
-        // Iteramos sobre los parámetros para obtener los productos y sus cantidades
-        for (Map.Entry<String, String> entry : requestParams.entrySet()) {
-            if (entry.getKey().startsWith("producto_")) {
-                Long productoId = Long.parseLong(entry.getKey().split("_")[1]);
-                int cantidad = Integer.parseInt(entry.getValue());
-                Producto producto = productoService.obtenerProductoPorId(productoId);
-
-                if (producto != null && cantidad > 0) {
-                    DetalleVenta detalleVenta = new DetalleVenta();
-                    detalleVenta.setProducto(producto);
-                    detalleVenta.setCantidad(cantidad);
-                    detalleVenta.setVenta(venta);
-                    detallesVenta.add(detalleVenta);
-
-                    // Actualizamos el stock del producto
-                    producto.setCantidad(producto.getCantidad() - cantidad);
-                    productoService.guardarProducto(producto);  // Usar guardarProducto en lugar de actualizarProducto
-
-                    total += producto.getPrecio() * cantidad;
-                }
-            }
+        double totalVenta = 0.0;
+        
+        for (DetalleVenta detalle : venta.getDetallesVenta()) {
+            Producto producto = productoService.obtenerProductoPorId(detalle.getProducto().getId());
+            detalle.setNombreProducto(producto.getNombre());
+            detalle.setPrecioUnitario(producto.getPrecio());
+            detalle.setSubtotal(producto.getPrecio() * detalle.getCantidad());
+            
+            totalVenta += detalle.getSubtotal(); // Sumar al total de la venta
         }
 
-        venta.setDetallesVenta(detallesVenta);
-        venta.setTotal(total);
-
-        // Calculamos el vuelto si el método de pago es efectivo
-        if ("efectivo".equals(requestParams.get("metodoPago"))) {
-            double montoRecibido = Double.parseDouble(requestParams.get("efectivo"));
-            venta.setMontoRecibido(montoRecibido);
-            venta.setVuelto(montoRecibido - total);
-        }
+        // Asignar el total calculado a la venta
+        venta.setTotal(totalVenta);
 
         ventaService.guardarVenta(venta);
 
-        model.addAttribute("mensaje", "Venta procesada exitosamente");
-        model.addAttribute("total", total);
-        model.addAttribute("vuelto", venta.getVuelto());
+        // Actualizar el stock de los productos vendidos
+        for (DetalleVenta detalle : venta.getDetallesVenta()) {
+            productoService.actualizarStock(detalle.getProducto().getId(), detalle.getCantidad());
+        }
 
-        return "caja";  // El nombre del archivo HTML
+        return "Venta registrada con éxito";
     }
+
 }

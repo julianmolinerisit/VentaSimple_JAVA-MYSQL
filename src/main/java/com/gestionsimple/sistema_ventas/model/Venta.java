@@ -1,7 +1,6 @@
 package com.gestionsimple.sistema_ventas.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,23 +11,17 @@ public class Venta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private LocalDateTime fechaHora;
-
-    @NotNull
-    private Double total;
-
-    private Double montoRecibido;
-
-    private Double vuelto;
-
-    @NotNull
-    private String metodoPago;
-
-    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "venta_id")
     private List<DetalleVenta> detallesVenta;
 
-    // Getters y setters
+    private String metodoPago;
+    
+    private LocalDateTime fechaHora;
+
+    private double total; // New field for total
+
+    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -38,36 +31,12 @@ public class Venta {
         this.id = id;
     }
 
-    public LocalDateTime getFechaHora() {
-        return fechaHora;
+    public List<DetalleVenta> getDetallesVenta() {
+        return detallesVenta;
     }
 
-    public void setFechaHora(LocalDateTime fechaHora) {
-        this.fechaHora = fechaHora;
-    }
-
-    public Double getTotal() {
-        return total;
-    }
-
-    public void setTotal(Double total) {
-        this.total = total;
-    }
-
-    public Double getMontoRecibido() {
-        return montoRecibido;
-    }
-
-    public void setMontoRecibido(Double montoRecibido) {
-        this.montoRecibido = montoRecibido;
-    }
-
-    public Double getVuelto() {
-        return vuelto;
-    }
-
-    public void setVuelto(Double vuelto) {
-        this.vuelto = vuelto;
+    public void setDetallesVenta(List<DetalleVenta> detallesVenta) {
+        this.detallesVenta = detallesVenta;
     }
 
     public String getMetodoPago() {
@@ -78,11 +47,19 @@ public class Venta {
         this.metodoPago = metodoPago;
     }
 
-    public List<DetalleVenta> getDetallesVenta() {
-        return detallesVenta;
+    public LocalDateTime getFechaHora() {
+        return fechaHora;
     }
 
-    public void setDetallesVenta(List<DetalleVenta> detallesVenta) {
-        this.detallesVenta = detallesVenta;
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora = fechaHora;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
 }

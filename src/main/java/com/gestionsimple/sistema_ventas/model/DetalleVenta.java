@@ -1,28 +1,36 @@
 package com.gestionsimple.sistema_ventas.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class DetalleVenta {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotNull
-    private Integer cantidad;
-
-    @ManyToOne
-    @JoinColumn(name = "venta_id")
-    private Venta venta;
 
     @ManyToOne
     @JoinColumn(name = "producto_id")
     private Producto producto;
 
-    // Getters y setters
+    @ManyToOne
+    @JoinColumn(name = "venta_id") // Nombre de la columna en la tabla detalle_venta que referencia a venta
+    private Venta venta;
 
+    private int cantidad;
+    private double precio;
+    private double subtotal;
+
+    // Campos adicionales para nombre del producto y precio unitario
+    private String nombreProducto;
+    private double precioUnitario;
+
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -31,12 +39,12 @@ public class DetalleVenta {
         this.id = id;
     }
 
-    public Integer getCantidad() {
-        return cantidad;
+    public Producto getProducto() {
+        return producto;
     }
 
-    public void setCantidad(Integer cantidad) {
-        this.cantidad = cantidad;
+    public void setProducto(Producto producto) {
+        this.producto = producto;
     }
 
     public Venta getVenta() {
@@ -47,11 +55,43 @@ public class DetalleVenta {
         this.venta = venta;
     }
 
-    public Producto getProducto() {
-        return producto;
+    public int getCantidad() {
+        return cantidad;
     }
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
+
+    public double getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    public void setPrecioUnitario(double precioUnitario) {
+        this.precioUnitario = precioUnitario;
     }
 }
