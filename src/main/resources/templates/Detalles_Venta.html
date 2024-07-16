@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Detalles de Venta</title>
+    <title>Detalles de Ventas</title>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 p-4">
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold mb-6">Detalles de Venta</h1>
+        <h1 class="text-3xl font-bold mb-6">Detalles de Ventas</h1>
         
-        <!-- Mostrar detalles de la venta -->
-        <div class="mb-6">
-            <h2 class="text-xl font-bold">Venta: <span th:text="${venta.id}"></span></h2>
-            <p>Fecha y Hora: <span th:text="${venta.fechaHora}"></span></p>
-            <!-- Agregar más detalles de la venta según necesites -->
-        </div>
-        
-        <!-- Mostrar detalles de los productos vendidos -->
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Venta</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha y Hora</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio Unitario</th>
@@ -30,7 +24,9 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 <!-- Iterar sobre cada detalle de venta -->
                 <tr th:each="detalle : ${detallesVenta}">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${detalle.producto.nombre}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${detalle.venta.id}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${detalle.venta.fechaHora}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${detalle.nombreProducto}"></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${detalle.cantidad}"></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${detalle.precioUnitario}"></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${detalle.subtotal}"></td>

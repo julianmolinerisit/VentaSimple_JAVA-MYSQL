@@ -25,9 +25,10 @@ public class VentaServiceImpl implements VentaService {
         return ventaRepository.findById(id).orElse(null);
     }
 
-	@Override
-	public List<Venta> obtenerTodasVentas() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	
+	   @Override
+	    public List<Venta> obtenerTodasVentas() {
+	        return (List<Venta>) ventaRepository.findAll();
+	    }
 }
