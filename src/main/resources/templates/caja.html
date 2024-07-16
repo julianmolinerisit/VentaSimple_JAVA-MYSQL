@@ -23,21 +23,11 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                         <tr>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio Unitario
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal
-                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio Unitario</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
                         </tr>
                         </thead>
                         <tbody id="tabla-productos-seleccionados">
@@ -51,28 +41,15 @@
         </div>
         <div>
             <div class="flex flex-wrap space-x-2">
-                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300"
-                        data-categoria="Cortes de Cerdo">Cortes de Cerdo
-                </button>
-                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300"
-                        data-categoria="Cortes de Ternera">Cortes de Ternera
-                </button>
-                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300"
-                        data-categoria="Pollo">Pollo
-                </button>
-                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300"
-                        data-categoria="Mercadería">Mercadería
-                </button>
-                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300"
-                        data-categoria="Insumos">Insumos
-                </button>
-                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300"
-                        data-categoria="Bultos">Bultos
-                </button>
+                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300" data-categoria="Cortes de Cerdo">Cortes de Cerdo</button>
+                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300" data-categoria="Cortes de Ternera">Cortes de Ternera</button>
+                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300" data-categoria="Pollo">Pollo</button>
+                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300" data-categoria="Mercadería">Mercadería</button>
+                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300" data-categoria="Insumos">Insumos</button>
+                <button class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300" data-categoria="Bultos">Bultos</button>
             </div>
             <h2 class="text-xl font-semibold mb-4">Productos</h2>
-            <div id="productos" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            </div>
+            <div id="productos" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
     </div>
     
@@ -80,141 +57,145 @@
     <div class="mt-4">
         <h2 class="text-xl font-semibold mb-2">Método de Pago</h2>
         <div class="flex space-x-4">
-            <button id="btn-efectivo" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300">Efectivo</button>
-            <button id="btn-tarjeta" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300">Tarjeta</button>
-            <!-- Agrega más botones según necesites -->
+            <button class="bg-green-500 text-white rounded-lg py-2 px-4 hover:bg-green-600 transition duration-300" onclick="seleccionarMetodoPago('EFECTIVO')">Efectivo</button>
+            <button class="bg-green-500 text-white rounded-lg py-2 px-4 hover:bg-green-600 transition duration-300" onclick="seleccionarMetodoPago('TARJETA')">Tarjeta</button>
+        </div>
+        <div id="campo-monto-pagado" class="mt-4 hidden">
+            <label for="monto-pagado" class="block text-lg font-medium text-gray-700">Monto Pagado:</label>
+            <input type="number" id="monto-pagado" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="Ingrese el monto pagado">
+        </div>
+        <div id="campo-vuelto" class="mt-4 hidden">
+            <span class="text-lg font-semibold">Vuelto: $<span id="vuelto"></span></span>
         </div>
     </div>
     
-    <!-- Botón Completar Venta -->
-    <button id="btn-completar-venta"
-            class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300 mt-8">Completar
-        Venta
-    </button>
+    <div class="mt-8">
+        <button id="btn-registrar-venta" class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300">Registrar Venta</button>
+    </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('Script cargado');
-        const botonesCategoria = document.querySelectorAll('[data-categoria]');
+    let productosSeleccionados = [];
+    let metodoPago = '';
+
+    document.querySelectorAll('button[data-categoria]').forEach(button => {
+        button.addEventListener('click', () => {
+            const categoria = button.getAttribute('data-categoria');
+            cargarProductosPorCategoria(categoria);
+        });
+    });
+
+    document.getElementById('btn-registrar-venta').addEventListener('click', () => {
+        registrarVenta();
+    });
+
+    function cargarProductosPorCategoria(categoria) {
+        axios.get(`/productos/categoria/${categoria}`)
+            .then(response => {
+                mostrarProductos(response.data);
+            });
+    }
+
+    function mostrarProductos(productos) {
         const contenedorProductos = document.getElementById('productos');
-        const contenedorProductosSeleccionados = document.getElementById('tabla-productos-seleccionados');
-        const totalVenta = document.getElementById('total-venta');
-        let productosSeleccionados = [];
-        let metodoPago = '';
+        contenedorProductos.innerHTML = '';
 
-        // Escucha clics en botones de categoría
-        botonesCategoria.forEach(boton => {
-            boton.addEventListener('click', () => {
-                const categoria = boton.getAttribute('data-categoria');
-                fetch(`/productos/categoria/${categoria}`)
-                    .then(response => response.json())
-                    .then(productos => {
-                        contenedorProductos.innerHTML = '';
-                        productos.forEach(producto => {
-                            const divProducto = document.createElement('div');
-                            divProducto.className = 'bg-white rounded-lg shadow-md p-4';
-                            divProducto.innerHTML = `
-                                <h3 class="text-lg font-semibold">${producto.nombre}</h3>
-                                <p>${producto.descripcion}</p>
-                                <p class="text-gray-700">$${producto.precio}</p>
-                                <button class="btn-producto bg-green-500 text-white py-2 px-4 rounded-lg mt-2 hover:bg-green-600 transition duration-300">Agregar</button>
-                            `;
-                            divProducto.querySelector('button').addEventListener('click', () => {
-                                agregarProductoSeleccionado(producto);
-                            });
-                            contenedorProductos.appendChild(divProducto);
-                        });
-                    })
-                    .catch(error => console.error('Error al obtener productos:', error));
+        productos.forEach(producto => {
+            const productoBtn = document.createElement('button');
+            productoBtn.classList.add('bg-gray-300', 'rounded-lg', 'py-2', 'px-4', 'hover:bg-gray-400', 'transition', 'duration-300', 'btn-producto');
+            productoBtn.textContent = `${producto.nombre} - $${producto.precio}`;
+            productoBtn.addEventListener('click', () => {
+                agregarProductoSeleccionado(producto);
             });
+            contenedorProductos.appendChild(productoBtn);
+        });
+    }
+
+    function agregarProductoSeleccionado(producto) {
+        const detalleVenta = {
+            producto: { id: producto.id },
+            nombreProducto: producto.nombre,
+            precioUnitario: producto.precio,
+            cantidad: 1,
+            subtotal: producto.precio
+        };
+
+        productosSeleccionados.push(detalleVenta);
+        actualizarTablaProductosSeleccionados();
+    }
+
+    function actualizarTablaProductosSeleccionados() {
+        const tablaProductos = document.getElementById('tabla-productos-seleccionados');
+        tablaProductos.innerHTML = '';
+
+        let total = 0;
+
+        productosSeleccionados.forEach(detalle => {
+            total += detalle.subtotal;
+
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${detalle.nombreProducto}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${detalle.descripcion}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${detalle.precioUnitario}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${detalle.cantidad}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${detalle.subtotal}</td>
+            `;
+            tablaProductos.appendChild(fila);
         });
 
-        // Función para agregar producto seleccionado
-        function agregarProductoSeleccionado(producto) {
-            const existeProducto = productosSeleccionados.find(p => p.id === producto.id);
-            if (existeProducto) {
-                existeProducto.cantidad += 1;
-            } else {
-                producto.cantidad = 1;
-                productosSeleccionados.push(producto);
-            }
-            renderizarProductosSeleccionados();
-            calcularTotal();
+        document.getElementById('total-venta').textContent = total.toFixed(2);
+    }
+
+    function seleccionarMetodoPago(metodo) {
+        metodoPago = metodo;
+        if (metodo === 'EFECTIVO') {
+            document.getElementById('campo-monto-pagado').classList.remove('hidden');
+            document.getElementById('campo-vuelto').classList.remove('hidden');
+        } else {
+            document.getElementById('campo-monto-pagado').classList.add('hidden');
+            document.getElementById('campo-vuelto').classList.add('hidden');
         }
+    }
 
-        // Función para renderizar productos seleccionados
-        function renderizarProductosSeleccionados() {
-            contenedorProductosSeleccionados.innerHTML = '';
-            productosSeleccionados.forEach(producto => {
-                const trProducto = document.createElement('tr');
-                trProducto.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">${producto.nombre}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${producto.descripcion}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">$${producto.precio}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${producto.cantidad}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">$${producto.precio * producto.cantidad}</td>
-                `;
-                contenedorProductosSeleccionados.appendChild(trProducto);
-            });
-        }
+    function calcularVuelto(montoPagado, total) {
+        return montoPagado - total;
+    }
 
-        // Función para calcular el total de la venta
-        function calcularTotal() {
-            let total = 0;
-            productosSeleccionados.forEach(producto => {
-                total += producto.precio * producto.cantidad;
-            });
-            totalVenta.innerText = total.toFixed(2);
-        }
+    function registrarVenta() {
+        const totalVenta = productosSeleccionados.reduce((total, detalle) => total + detalle.subtotal, 0);
+        const montoPagado = parseFloat(document.getElementById('monto-pagado').value) || 0;
+        const vuelto = calcularVuelto(montoPagado, totalVenta);
 
-        // Escucha clics en botones de método de pago
-        document.getElementById('btn-efectivo').addEventListener('click', () => {
-            metodoPago = 'EFECTIVO';
-            console.log('Método de pago seleccionado: ', metodoPago);
-        });
+        const venta = {
+            detallesVenta: productosSeleccionados,
+            metodoPago: metodoPago,
+            total: totalVenta,
+            montoPagado: metodoPago === 'EFECTIVO' ? montoPagado : 0,
+            vuelto: metodoPago === 'EFECTIVO' ? vuelto : 0
+        };
 
-        document.getElementById('btn-tarjeta').addEventListener('click', () => {
-            metodoPago = 'TARJETA';
-            console.log('Método de pago seleccionado: ', metodoPago);
-        });
-
-        // Escucha clic en botón de completar venta
-        document.getElementById('btn-completar-venta').addEventListener('click', () => {
-            if (productosSeleccionados.length === 0) {
-                alert('No hay productos seleccionados para la venta.');
-                return;
-            }
-            if (!metodoPago) {
-                alert('Selecciona un método de pago.');
-                return;
-            }
-            const venta = {
-                detallesVenta: productosSeleccionados.map(producto => ({
-                    producto: { id: producto.id },
-                    cantidad: producto.cantidad,
-                    precio: producto.precio
-                })),
-                metodoPago: metodoPago  // Agrega el método de pago seleccionado
-            };
-            console.log('Venta a enviar: ', venta);
-            fetch('/ventas', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(venta)
+        axios.post('/ventas', venta)
+            .then(response => {
+                alert(response.data);
+                productosSeleccionados = [];
+                actualizarTablaProductosSeleccionados();
+                document.getElementById('total-venta').textContent = '0.00';
+                document.getElementById('monto-pagado').value = '';
+                document.getElementById('vuelto').textContent = '';
             })
-                .then(response => response.text())
-                .then(mensaje => {
-                    alert(mensaje);
-                    productosSeleccionados = [];
-                    renderizarProductosSeleccionados();
-                    calcularTotal();
-                    metodoPago = '';  // Reinicia el método de pago después de completar la venta
-                })
-                .catch(error => console.error('Error al registrar la venta:', error));
-        });
+            .catch(error => {
+                console.error(error);
+                alert('Error al registrar la venta.');
+            });
+    }
+
+    document.getElementById('monto-pagado').addEventListener('input', () => {
+        const totalVenta = parseFloat(document.getElementById('total-venta').textContent);
+        const montoPagado = parseFloat(document.getElementById('monto-pagado').value) || 0;
+        const vuelto = calcularVuelto(montoPagado, totalVenta);
+        document.getElementById('vuelto').textContent = vuelto.toFixed(2);
     });
 </script>
 </body>

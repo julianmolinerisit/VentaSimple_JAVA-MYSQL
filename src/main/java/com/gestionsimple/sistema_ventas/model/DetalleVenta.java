@@ -1,5 +1,7 @@
 package com.gestionsimple.sistema_ventas.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +27,9 @@ public class DetalleVenta {
     private int cantidad;
     private double precio;
     private double subtotal;
+    private LocalDate fecha; // Agregar este campo para fecha
 
+ 
     // Campos adicionales para nombre del producto y precio unitario
     private String nombreProducto;
     private double precioUnitario;
@@ -94,4 +98,12 @@ public class DetalleVenta {
     public void setPrecioUnitario(double precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
+
+	public LocalDate getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(LocalDate fecha) {
+		this.fecha = fecha;
+	}
 }

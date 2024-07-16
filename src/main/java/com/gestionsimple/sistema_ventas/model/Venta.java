@@ -19,10 +19,15 @@ public class Venta {
     
     private LocalDateTime fechaHora;
 
-    private double total; // New field for total
+    private double total; // Total de la venta
 
-    // Getters and Setters
+    private double montoPagado; // Monto pagado por el cliente
 
+    private double vuelto; // Vuelto a entregar al cliente
+
+    private String fechaHoraFormatted; // Campo para la fecha formateada
+
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -62,4 +67,30 @@ public class Venta {
     public void setTotal(double total) {
         this.total = total;
     }
+
+    public double getMontoPagado() {
+        return montoPagado;
+    }
+
+    public void setMontoPagado(double montoPagado) {
+        this.montoPagado = montoPagado;
+    }
+
+    public double getVuelto() {
+        return vuelto;
+    }
+
+    public void setVuelto(double vuelto) {
+        this.vuelto = vuelto;
+    }
+
+	public String getFechaHoraFormatted() {
+		return fechaHoraFormatted;
+	}
+
+	public void setFechaHoraFormatted(String fechaHoraFormatted) {
+		this.fechaHoraFormatted = fechaHoraFormatted;
+	}
+    
+    
 }
