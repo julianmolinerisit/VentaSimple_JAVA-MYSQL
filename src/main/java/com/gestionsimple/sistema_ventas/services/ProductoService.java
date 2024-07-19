@@ -9,7 +9,7 @@ public interface ProductoService {
     List<Producto> obtenerProductosPorCategoria(String categoria);
     Producto obtenerProductoPorId(Long id);
     void actualizarProducto(Producto producto);
-    void guardarProducto(Producto producto);
+    Producto guardarProducto(Producto producto);
     List<Producto> obtenerTodosLosProductos();
     void eliminarProducto(Long id);
     void actualizarStock(Long productoId, double cantidad);

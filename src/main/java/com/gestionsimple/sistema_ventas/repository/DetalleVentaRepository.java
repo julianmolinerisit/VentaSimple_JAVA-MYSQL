@@ -23,4 +23,9 @@ public interface DetalleVentaRepository extends JpaRepository<DetalleVenta, Long
     
     @Query("SELECT d FROM DetalleVenta d WHERE d.venta.fechaHora BETWEEN :startOfDay AND :endOfDay")
     List<DetalleVenta> findByVentaFechaHoraBetween(@Param("startOfDay") LocalDateTime startOfDay, @Param("endOfDay") LocalDateTime endOfDay);
+
+    @Query("SELECT dv FROM DetalleVenta dv WHERE " +
+            "dv.venta.metodoPago LIKE %:query% OR " +
+            "dv.producto.nombre LIKE %:query%")
+     List<DetalleVenta> findByQuery(@Param("query") String query);
 }

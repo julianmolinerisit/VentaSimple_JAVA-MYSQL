@@ -49,4 +49,16 @@ public class DetalleVentaServiceImpl implements DetalleVentaService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public List<DetalleVenta> obtenerDetallesVentaPorRangoFechas(LocalDateTime inicio, LocalDateTime fin) {
+	    return detalleVentaRepository.findByVentaFechaHoraBetween(inicio, fin);
+	}
+
+	@Override
+	public List<DetalleVenta> buscarDetallesVentaPorParametros(String query) {
+	    // Implementar la lógica de búsqueda por parámetros, esto dependerá de tu lógica de negocio y base de datos
+	    return detalleVentaRepository.findByQuery(query);
+	}
+
 }

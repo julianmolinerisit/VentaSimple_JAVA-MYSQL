@@ -21,18 +21,21 @@ public class DetalleVenta {
     private Producto producto;
 
     @ManyToOne
-    @JoinColumn(name = "venta_id") // Nombre de la columna en la tabla detalle_venta que referencia a venta
+    @JoinColumn(name = "venta_id")
     private Venta venta;
 
     private int cantidad;
     private double precio;
     private double subtotal;
-    private LocalDate fecha; // Agregar este campo para fecha
+    private LocalDate fecha; // Campo adicional para fecha
 
- 
     // Campos adicionales para nombre del producto y precio unitario
     private String nombreProducto;
     private double precioUnitario;
+
+    // Constructor vacío
+    public DetalleVenta() {
+    }
 
     // Getters y Setters
     public Long getId() {
@@ -83,6 +86,14 @@ public class DetalleVenta {
         this.subtotal = subtotal;
     }
 
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
     public String getNombreProducto() {
         return nombreProducto;
     }
@@ -98,12 +109,4 @@ public class DetalleVenta {
     public void setPrecioUnitario(double precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
-
-	public LocalDate getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(LocalDate fecha) {
-		this.fecha = fecha;
-	}
 }

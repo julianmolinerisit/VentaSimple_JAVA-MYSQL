@@ -12,4 +12,6 @@ public interface DetalleVentaService {
     List<DetalleVenta> obtenerDetallesVentaPorFecha(LocalDateTime fechaHora); // Actualizar tipo a LocalDateTime
     List<DetalleVenta> buscarDetallesVenta(String query); // Nuevo método para búsqueda
     List<DetalleVenta> obtenerDetallesVentaHoy();
+    List<DetalleVenta> obtenerDetallesVentaPorRangoFechas(LocalDateTime inicio, LocalDateTime fin);
+    List<DetalleVenta> buscarDetallesVentaPorParametros(String query);
 }

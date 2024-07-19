@@ -1,15 +1,12 @@
 package com.gestionsimple.sistema_ventas.controller;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gestionsimple.sistema_ventas.dto.VentaConDetallesDTO;
 import com.gestionsimple.sistema_ventas.model.DetalleVenta;
+import com.gestionsimple.sistema_ventas.model.Venta;
 import com.gestionsimple.sistema_ventas.services.DetalleVentaService;
 
 @Controller
@@ -28,74 +26,66 @@ public class DetalleVentaController {
     private DetalleVentaService detalleVentaService;
 
     @GetMapping
-    public String mostrarTodosDetallesVenta(Model model) {
-        List<DetalleVenta> detallesVenta = detalleVentaService.obtenerTodosDetallesVenta();
-        List<VentaConDetallesDTO> ventasConDetalles = procesarDetallesVenta(detallesVenta);
-        model.addAttribute("ventasConDetalles", ventasConDetalles);
-        return "detalles_venta";
-    }
+    public String mostrarTodosDetallesVenta(@RequestParam(value = "filtro", required = false) String filtro,
+                                            @RequestParam(value = "busqueda", required = false) String busqueda,
+                                            Model model) {
+        List<DetalleVenta> detallesVenta;
 
-    @GetMapping("/filtrar-por-fecha")
-    public String mostrarDetallesVentaPorFecha(
-            @RequestParam("fecha") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaHora, // Cambiar a LocalDateTime
-            Model model) {
+        if (busqueda != null && !busqueda.isEmpty()) {
+            detallesVenta = detalleVentaService.buscarDetallesVentaPorParametros(busqueda);
+        } else if (filtro != null) {
+            LocalDateTime inicio;
+            LocalDateTime fin = LocalDateTime.now();
 
-        List<DetalleVenta> detallesVenta = detalleVentaService.obtenerDetallesVentaPorFecha(fechaHora);
-        List<VentaConDetallesDTO> ventasConDetalles = procesarDetallesVenta(detallesVenta);
-        model.addAttribute("ventasConDetalles", ventasConDetalles);
-        return "detalles_venta";
-    }
+            switch (filtro) {
+                case "hoy":
+                    inicio = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+                    break;
+                case "ayer":
+                    inicio = LocalDateTime.now().minusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+                    fin = inicio.plusDays(1).minusNanos(1);
+                    break;
+                case "semana":
+                    inicio = LocalDateTime.now().minusDays(LocalDateTime.now().getDayOfWeek().getValue() - 1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+                    break;
+                case "mes":
+                    inicio = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+                    break;
+                default:
+                    detallesVenta = detalleVentaService.obtenerTodosDetallesVenta();
+                    model.addAttribute("ventasConDetalles", procesarDetallesVenta(detallesVenta));
+                    return "detalles_venta";
+            }
 
-    @GetMapping("/buscar")
-    public String buscarDetallesVenta(
-            @RequestParam("query") String query,
-            Model model) {
+            detallesVenta = detalleVentaService.obtenerDetallesVentaPorRangoFechas(inicio, fin);
+        } else {
+            detallesVenta = detalleVentaService.obtenerTodosDetallesVenta();
+        }
 
-        List<DetalleVenta> detallesVenta = detalleVentaService.buscarDetallesVenta(query);
-        List<VentaConDetallesDTO> ventasConDetalles = procesarDetallesVenta(detallesVenta);
-        model.addAttribute("ventasConDetalles", ventasConDetalles);
+        model.addAttribute("ventasConDetalles", procesarDetallesVenta(detallesVenta));
         return "detalles_venta";
     }
 
     private List<VentaConDetallesDTO> procesarDetallesVenta(List<DetalleVenta> detallesVenta) {
-        Map<Long, List<DetalleVenta>> mapDetallesPorVenta = new HashMap<>();
+        Map<Long, VentaConDetallesDTO> ventasMap = new HashMap<>();
+
         for (DetalleVenta detalle : detallesVenta) {
-            Long idVenta = detalle.getVenta().getId();
-            if (!mapDetallesPorVenta.containsKey(idVenta)) {
-                mapDetallesPorVenta.put(idVenta, new ArrayList<>());
-            }
-            mapDetallesPorVenta.get(idVenta).add(detalle);
+            Venta venta = detalle.getVenta();
+            VentaConDetallesDTO ventaConDetallesDTO = ventasMap.computeIfAbsent(venta.getId(), k -> {
+                VentaConDetallesDTO nuevaVenta = new VentaConDetallesDTO();
+                nuevaVenta.setIdVenta(venta.getId());
+                nuevaVenta.setFechaHoraFormatted(venta.getFechaHora().toString());  // Formatea la fecha según tu preferencia
+                nuevaVenta.setMetodoPago(venta.getMetodoPago());
+                nuevaVenta.setMontoPagado(venta.getMontoPagado());
+                nuevaVenta.setVuelto(venta.getVuelto());
+                nuevaVenta.setTotal(venta.getTotal());
+                nuevaVenta.setDetallesVenta(new ArrayList<>());
+                return nuevaVenta;
+            });
+
+            ventaConDetallesDTO.getDetallesVenta().add(detalle);
         }
 
-        // Formatear fecha y hora si es necesario en cada detalle
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        mapDetallesPorVenta.forEach((idVenta, detalles) -> {
-            detalles.forEach(detalle -> {
-                String fechaFormateada = detalle.getVenta().getFechaHora().format(formatter);
-                detalle.getVenta().setFechaHoraFormatted(fechaFormateada);
-            });
-        });
-
-        // Calcular el total de la venta y pasar los datos al modelo
-        List<VentaConDetallesDTO> ventasConDetalles = new ArrayList<>();
-        mapDetallesPorVenta.forEach((idVenta, detalles) -> {
-            VentaConDetallesDTO ventaConDetalles = new VentaConDetallesDTO();
-            ventaConDetalles.setIdVenta(idVenta);
-            ventaConDetalles.setFechaHoraFormatted(detalles.get(0).getVenta().getFechaHoraFormatted());
-            ventaConDetalles.setMetodoPago(detalles.get(0).getVenta().getMetodoPago());
-            ventaConDetalles.setMontoPagado(detalles.get(0).getVenta().getMontoPagado());
-            ventaConDetalles.setVuelto(detalles.get(0).getVenta().getVuelto());
-
-            double totalVenta = 0.0;
-            for (DetalleVenta detalle : detalles) {
-                totalVenta += detalle.getSubtotal();
-            }
-            ventaConDetalles.setTotal(totalVenta);
-
-            ventaConDetalles.setDetallesVenta(detalles);
-            ventasConDetalles.add(ventaConDetalles);
-        });
-
-        return ventasConDetalles;
+        return new ArrayList<>(ventasMap.values());
     }
 }
