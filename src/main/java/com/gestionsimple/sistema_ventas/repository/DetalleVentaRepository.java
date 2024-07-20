@@ -28,4 +28,23 @@ public interface DetalleVentaRepository extends JpaRepository<DetalleVenta, Long
             "dv.venta.metodoPago LIKE %:query% OR " +
             "dv.producto.nombre LIKE %:query%")
      List<DetalleVenta> findByQuery(@Param("query") String query);
+    
+    
+    @Query("SELECT HOUR(d.venta.fechaHora) as hora, COUNT(d) as cantidad FROM DetalleVenta d GROUP BY HOUR(d.venta.fechaHora)")
+    List<Object[]> obtenerHorariosMasConcurridos();
+
+    @Query("SELECT DATE(d.venta.fechaHora) as fecha, COUNT(d) as cantidad FROM DetalleVenta d GROUP BY DATE(d.venta.fechaHora)")
+    List<Object[]> obtenerDiasMasConcurridos();
+
+    @Query("SELECT d.venta.metodoPago, COUNT(d) as cantidad FROM DetalleVenta d GROUP BY d.venta.metodoPago")
+    List<Object[]> obtenerMediosDePago();
+
+    @Query("SELECT d.producto.nombre, SUM(d.cantidad) as cantidad FROM DetalleVenta d GROUP BY d.producto.nombre ORDER BY cantidad DESC")
+    List<Object[]> obtenerProductosMasVendidos();
+    
+    @Query("SELECT SUM(d.subtotal) FROM DetalleVenta d")
+    Double obtenerTotalRecaudado();
+
+    @Query("SELECT SUM(d.subtotal) FROM DetalleVenta d WHERE DATE(d.venta.fechaHora) = :dia")
+    Double obtenerRecaudadoPorDia(@Param("dia") LocalDate dia);
 }

@@ -1,44 +1,56 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Caja</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-	rel="stylesheet">
-<style>
-.btn-producto {
-	display: block;
-	width: 100%;
-	text-align: left;
-}
+    <meta charset="UTF-8">
+    <title>Caja</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .btn-producto {
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
 
-.btn-producto {
-	display: block;
-	width: 100%;
-	text-align: left;
-}
+        .btn-numero, .btn-borrar {
+            display: inline-block;
+            width: 30%;
+            margin: 2%;
+            text-align: center;
+            padding: 10px;
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+        }
 
-.btn-numero, .btn-borrar {
-	display: inline-block;
-	width: 30%;
-	margin: 2%;
-	text-align: center;
-	padding: 10px;
-	background-color: #f3f4f6;
-	border: 1px solid #d1d5db;
-	border-radius: 8px;
-	cursor: pointer;
-}
-
-.btn-numero:hover, .btn-borrar:hover {
-	background-color: #e5e7eb;
-}
-</style>
+        .btn-numero:hover, .btn-borrar:hover {
+            background-color: #e5e7eb;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
-	<div class="container mx-auto py-8 px-4">
-		<h1 class="text-3xl font-bold mb-8">Caja</h1>
+    <div class="container mx-auto py-8 px-4">
+        <h1 class="text-3xl font-bold mb-8">Caja</h1>
+        <div>
+            <p>
+                Bienvenido, <span th:text="${nombreUsuario}"></span>
+            </p>
+        </div>
+		<!-- Botón para logout -->
+		<form th:action="@{/logout}" method="post">
+    <button type="submit"
+        class="bg-red-500 text-white rounded-lg py-2 px-4 hover:bg-red-600 transition duration-300">Cerrar
+        sesión</button>
+</form>
+
+		<div class="mt-4">
+			<p>
+				Hora actual: <span id="current-time"></span>
+			</p>
+			<p>
+				Tiempo de caja abierta: <span id="time-elapsed"></span>
+			</p>
+		</div>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 			<div class="overflow-hidden rounded-lg border border-gray-200">
 				<h2 class="text-xl font-semibold bg-gray-200 py-3 px-6">Productos
@@ -372,6 +384,37 @@
         const vuelto = calcularVuelto(montoPagado, totalVenta);
         document.getElementById('vuelto').textContent = vuelto.toFixed(2);
     });
+    
+    // Función para actualizar la hora actual
+    function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+        document.getElementById('current-time').textContent = timeString;
+    }
+
+    // Función para calcular el tiempo de caja abierta
+    function updateElapsedTime() {
+        const startTime = new Date(sessionStorage.getItem('horaInicio'));
+        const now = new Date();
+        const elapsedMs = now - startTime;
+
+        const hours = Math.floor(elapsedMs / (1000 * 60 * 60));
+        const minutes = Math.floor((elapsedMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((elapsedMs % (1000 * 60)) / 1000);
+
+        document.getElementById('time-elapsed').textContent = `${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    // Actualizar la hora actual y el tiempo de caja abierta cada segundo
+    setInterval(() => {
+        updateTime();
+        updateElapsedTime();
+    }, 1000);
+
+    // Guardar la hora de inicio en sessionStorage si no está ya guardada
+    if (!sessionStorage.getItem('horaInicio')) {
+        sessionStorage.setItem('horaInicio', new Date().toISOString());
+    }
 </script>
 
 </body>
