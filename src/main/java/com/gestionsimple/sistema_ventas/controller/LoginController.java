@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gestionsimple.sistema_ventas.model.Login;
-import com.gestionsimple.sistema_ventas.services.LoginService;
+import com.gestionsimple.sistema_ventas.service.LoginService;
 
 import jakarta.servlet.http.HttpSession;
 

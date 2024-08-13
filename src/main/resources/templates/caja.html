@@ -1,47 +1,49 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Caja</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .btn-producto {
-            display: block;
-            width: 100%;
-            text-align: left;
-        }
+<meta charset="UTF-8">
+<title>Caja</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+	rel="stylesheet">
+<style>
+.btn-producto {
+	display: block;
+	width: 100%;
+	text-align: left;
+}
 
-        .btn-numero, .btn-borrar {
-            display: inline-block;
-            width: 30%;
-            margin: 2%;
-            text-align: center;
-            padding: 10px;
-            background-color: #f3f4f6;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            cursor: pointer;
-        }
+.btn-numero, .btn-borrar {
+	display: inline-block;
+	width: 30%;
+	margin: 2%;
+	text-align: center;
+	padding: 10px;
+	background-color: #f3f4f6;
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	cursor: pointer;
+}
 
-        .btn-numero:hover, .btn-borrar:hover {
-            background-color: #e5e7eb;
-        }
-    </style>
+.btn-numero:hover, .btn-borrar:hover {
+	background-color: #e5e7eb;
+}
+</style>
 </head>
 <body class="bg-gray-100">
-    <div class="container mx-auto py-8 px-4">
-        <h1 class="text-3xl font-bold mb-8">Caja</h1>
-        <div>
-            <p>
-                Bienvenido, <span th:text="${nombreUsuario}"></span>
-            </p>
-        </div>
+	<div class="container mx-auto py-8 px-4">
+		<h1 class="text-3xl font-bold mb-8">Caja</h1>
+		<div>
+			<p>
+				Bienvenido, <span th:text="${nombreUsuario}"></span>
+			</p>
+		</div>
 		<!-- Botón para logout -->
 		<form th:action="@{/logout}" method="post">
-    <button type="submit"
-        class="bg-red-500 text-white rounded-lg py-2 px-4 hover:bg-red-600 transition duration-300">Cerrar
-        sesión</button>
-</form>
+			<button type="submit"
+				class="bg-red-500 text-white rounded-lg py-2 px-4 hover:bg-red-600 transition duration-300">Cerrar
+				sesión</button>
+		</form>
 
 		<div class="mt-4">
 			<p>
@@ -86,33 +88,21 @@
 			</div>
 			<div>
 				<div class="flex flex-wrap space-x-2 mb-4">
-					<button
-						class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300 mb-2"
-						data-categoria="Cortes de Cerdo">Cortes de Cerdo</button>
-					<button
-						class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300 mb-2"
-						data-categoria="Cortes de Ternera">Cortes de Ternera</button>
-					<button
-						class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300 mb-2"
-						data-categoria="Pollo">Pollo</button>
-					<button
-						class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300 mb-2"
-						data-categoria="Mercadería">Mercadería</button>
-					<button
-						class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300 mb-2"
-						data-categoria="Insumos">Insumos</button>
-					<button
-						class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300 mb-2"
-						data-categoria="Bultos">Bultos</button>
-					<!-- Botón para abrir el modal de ingreso manual de monto -->
-
+					<!-- Iterar sobre las categorías para generar los botones dinámicamente -->
+					<div th:each="categoria : ${categorias}" class="mb-2">
+						<button class="w-full bg-blue-500 text-white py-2 px-4 rounded"
+							th:text="${categoria.nombre}"
+							th:onclick="'filtrarProductos(' + ${categoria.id} + ')'">
+						</button>
+					</div>
 					<button id="btn-mostrar-modal"
-						class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300 mb-2">Ingresar
-						Monto Manualmente</button>
+						class="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300 mb-2">
+						Ingresar Monto Manualmente</button>
 				</div>
 				<h2 class="text-xl font-semibold mb-4">Productos</h2>
 				<div id="productos" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 			</div>
+
 		</div>
 
 
@@ -201,6 +191,51 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script>
+	
+	function filtrarProductos(categoriaId) {
+	    fetch(`/filtrarProductos/${categoriaId}`)
+	        .then(response => {
+	            if (!response.ok) {
+	                throw new Error('Error al cargar los productos');
+	            }
+	            return response.json();
+	        })
+	        .then(productos => {
+	            const productosDiv = document.getElementById('productos');
+	            productosDiv.innerHTML = ''; // Limpiar productos anteriores
+	            
+	            if (productos.length === 0) {
+	                productosDiv.innerHTML = '<p>No hay productos disponibles para esta categoría.</p>';
+	            } else {
+	                productos.forEach(producto => {
+	                    const productoElement = document.createElement('button');
+	                    productoElement.className = 'p-4 bg-white shadow rounded-lg btn-producto';
+
+	                    // Mostrar el stock y un mensaje si el producto no está disponible
+	                    const stockMensaje = producto.stock > 0 ? `Stock: ${producto.stock}` : 'No disponible';
+	                    productoElement.innerHTML = `
+	                        <h3 class="text-lg font-semibold">${producto.nombre}</h3>
+	                        <p>Precio: $${producto.precioVenta}</p>
+	                        <p>${stockMensaje}</p>
+	                    `;
+	                    
+	                    // Desactivar el botón si el producto no está disponible
+	                    if (producto.stock === 0) {
+	                        productoElement.disabled = true;
+	                        productoElement.classList.add('bg-gray-300', 'cursor-not-allowed');
+	                    } else {
+	                        productoElement.onclick = () => agregarProductoSeleccionado(producto);
+	                    }
+
+	                    productosDiv.appendChild(productoElement);
+	                });
+	            }
+	        })
+	        .catch(error => {
+	            console.error('Error:', error);
+	        });
+	}
+	
     let productosSeleccionados = [];
     let metodoPago = '';
 
@@ -248,15 +283,16 @@
                 producto: { id: producto.id },
                 nombreProducto: producto.nombre,
                 descripcion: producto.descripcion,
-                precioUnitario: producto.precio,
+                precioUnitario: producto.precioVenta, // Asegúrate de usar el precio correcto
                 cantidad: 1,
-                subtotal: producto.precio
+                subtotal: producto.precioVenta
             };
             productosSeleccionados.push(detalleVenta);
         }
 
         actualizarTablaProductosSeleccionados();
     }
+
 
     function actualizarTablaProductosSeleccionados() {
         const tablaProductos = document.getElementById('tabla-productos-seleccionados');
@@ -415,6 +451,8 @@
     if (!sessionStorage.getItem('horaInicio')) {
         sessionStorage.setItem('horaInicio', new Date().toISOString());
     }
+    
+    
 </script>
 
 </body>

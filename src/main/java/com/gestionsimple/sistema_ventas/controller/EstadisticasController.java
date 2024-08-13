@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.gestionsimple.sistema_ventas.services.EstadisticasService;
+import com.gestionsimple.sistema_ventas.service.EstadisticasService;
 
 @Controller
 public class EstadisticasController {

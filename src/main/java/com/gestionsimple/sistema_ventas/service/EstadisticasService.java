@@ -1,4 +1,4 @@
-package com.gestionsimple.sistema_ventas.services;
+package com.gestionsimple.sistema_ventas.service;
 
 import java.util.List;
 

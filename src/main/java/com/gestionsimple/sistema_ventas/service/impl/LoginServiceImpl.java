@@ -1,8 +1,9 @@
-package com.gestionsimple.sistema_ventas.services.impl;
+package com.gestionsimple.sistema_ventas.service.impl;
 
 import com.gestionsimple.sistema_ventas.model.Login;
 import com.gestionsimple.sistema_ventas.repository.LoginRepository;
-import com.gestionsimple.sistema_ventas.services.LoginService;
+import com.gestionsimple.sistema_ventas.service.LoginService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

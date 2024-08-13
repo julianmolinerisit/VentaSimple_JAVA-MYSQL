@@ -1,4 +1,4 @@
-package com.gestionsimple.sistema_ventas.services;
+package com.gestionsimple.sistema_ventas.service;
 
 import com.gestionsimple.sistema_ventas.model.Login;
 

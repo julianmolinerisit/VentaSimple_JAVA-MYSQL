@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.gestionsimple.sistema_ventas.dto.VentaConDetallesDTO;
 import com.gestionsimple.sistema_ventas.model.DetalleVenta;
 import com.gestionsimple.sistema_ventas.model.Venta;
-import com.gestionsimple.sistema_ventas.services.DetalleVentaService;
+import com.gestionsimple.sistema_ventas.service.DetalleVentaService;
 
 @Controller
 @RequestMapping("/detalles-venta")

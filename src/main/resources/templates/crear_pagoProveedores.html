@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registrar Pago a Proveedor</title>
+</head>
+<body>
+    <h1>Registrar Nuevo Pago a Proveedor</h1>
+    <form th:action="@{/pagosProveedores}" th:object="${pagoProveedores}" method="post">
+        <label for="monto">Monto:</label>
+        <input type="number" id="monto" name="monto" th:field="*{monto}" step="0.01" required />
+        <br />
+
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha" name="fecha" th:field="*{fecha}" required />
+        <br />
+
+        <label for="proveedor">Proveedor:</label>
+        <select id="proveedor" name="proveedor.id" th:field="*{proveedor.id}" required>
+            <option th:each="proveedor : ${proveedores}" th:value="${proveedor.id}" th:text="${proveedor.nombre}">Proveedor</option>
+        </select>
+        <br />
+
+        <button type="submit">Guardar Pago</button>
+    </form>
+</body>
+</html>

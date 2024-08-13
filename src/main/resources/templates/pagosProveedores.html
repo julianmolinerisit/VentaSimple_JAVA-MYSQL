@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Pagos a Proveedores</title>
+</head>
+<body>
+    <h1>Lista de Pagos a Proveedores</h1>
+    <a th:href="@{/pagosProveedores/nuevo}">Registrar Nuevo Pago a Proveedor</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+                <th>Proveedor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="pago : ${pagosProveedores}">
+                <td th:text="${pago.id}">ID</td>
+                <td th:text="${pago.monto}">Monto</td>
+                <td th:text="${pago.fecha}">Fecha</td>
+                <td th:text="${pago.proveedor.nombre}">Proveedor</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

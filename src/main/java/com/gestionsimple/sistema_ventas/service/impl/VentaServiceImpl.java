@@ -1,8 +1,8 @@
-package com.gestionsimple.sistema_ventas.services.impl;
+package com.gestionsimple.sistema_ventas.service.impl;
 
 import com.gestionsimple.sistema_ventas.model.Venta;
 import com.gestionsimple.sistema_ventas.repository.VentaRepository;
-import com.gestionsimple.sistema_ventas.services.VentaService;
+import com.gestionsimple.sistema_ventas.service.VentaService;
 
 import java.util.List;
 

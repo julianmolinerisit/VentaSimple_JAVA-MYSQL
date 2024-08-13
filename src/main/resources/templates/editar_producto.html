@@ -39,7 +39,7 @@
             <div class="mb-4">
                 <label for="categoria" class="block text-gray-700 text-sm font-bold mb-2">Categoría:</label>
                 <select id="categoria" th:field="*{categoria}" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    <option th:each="cat : ${categorias}" th:value="${cat}" th:text="${cat}" th:selected="${producto.categoria == cat}">Categoría</option>
+                    <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}" th:selected="${producto.categoria.id == cat.id}">Categoría</option>
                 </select>
             </div>
             <div class="mb-4">
@@ -53,12 +53,20 @@
             </div>
             <div class="mb-4">
                 <label id="labelPrecio" for="precio" th:text="${producto.esPesable} ? 'Precio por kg:' : 'Precio unitario:'" class="block text-gray-700 text-sm font-bold mb-2">Precio:</label>
-                <input type="text" id="precio" th:field="*{precio}" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input type="text" id="precio" th:field="*{precioCompra}" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
                 <label id="labelCantidad" for="cantidad" th:text="${producto.esPesable} ? 'Cantidad (kg):' : 'Cantidad (u):'" class="block text-gray-700 text-sm font-bold mb-2">Cantidad:</label>
-                <input type="text" id="cantidad" th:field="*{cantidad}" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input type="text" id="cantidad" th:field="*{stock}" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 <span id="unidadCantidad" th:text="${producto.esPesable} ? 'kg' : 'u'" class="text-gray-600 text-sm">u</span>
+            </div>
+            <div class="mb-4">
+                <label for="grasaDesperdicio" class="block text-gray-700 text-sm font-bold mb-2">Grasa de Desperdicio:</label>
+                <input type="text" id="grasaDesperdicio" th:field="*{grasaDesperdicio}" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4">
+                <label for="otrosDesperdicios" class="block text-gray-700 text-sm font-bold mb-2">Otros Desperdicios:</label>
+                <input type="text" id="otrosDesperdicios" th:field="*{otrosDesperdicios}" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-6">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Guardar</button>

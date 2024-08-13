@@ -1,8 +1,8 @@
-package com.gestionsimple.sistema_ventas.services.impl;
+package com.gestionsimple.sistema_ventas.service.impl;
 
 import com.gestionsimple.sistema_ventas.model.DetalleVenta;
 import com.gestionsimple.sistema_ventas.repository.DetalleVentaRepository;
-import com.gestionsimple.sistema_ventas.services.DetalleVentaService;
+import com.gestionsimple.sistema_ventas.service.DetalleVentaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
